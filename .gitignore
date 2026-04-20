@@ -58,3 +58,6 @@ $RECYCLE.BIN/
 
 # Azure Functions
 local.settings.json
+
+# Client-side library files (managed by libman)
+src/web/wwwroot/lib/
