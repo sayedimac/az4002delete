@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <!-- Note: Azure Functions Worker SDK 2.0.0 supports up to net9.0.
+         Upgrade to net10.0 once the SDK adds net10.0 support. -->
     <TargetFramework>net9.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
