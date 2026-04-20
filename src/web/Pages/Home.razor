@@ -1,0 +1,87 @@
+﻿@page "/"
+
+<PageTitle>AI Chat Assistant</PageTitle>
+
+<div style="max-width: 800px; margin: 0 auto;">
+
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 1.5rem; font-weight: 600; color: var(--gh-text); margin-bottom: 0.5rem;">
+            AI Chat Assistant
+        </h1>
+        <p style="color: var(--gh-text-secondary); margin: 0;">
+            A Blazor WebAssembly chat application backed by Azure Functions.
+        </p>
+    </div>
+
+    <!-- Repo-style info bar -->
+    <div class="gh-card" style="padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <span class="gh-label gh-label-green">
+            <svg width="12" height="12" viewBox="0 0 16 16" style="fill: currentColor; margin-right: 4px;">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>
+                <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/>
+            </svg>
+            Online
+        </span>
+        <span style="color: var(--gh-text-secondary); font-size: 0.8125rem;">
+            .NET 10 · Blazor WASM · Azure Functions
+        </span>
+        <span class="gh-label gh-label-blue" style="margin-left: auto;">v1.0.0</span>
+    </div>
+
+    <!-- Feature cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem;">
+
+        <div class="gh-card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <svg width="20" height="20" viewBox="0 0 16 16" style="fill: var(--gh-accent);">
+                    <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/>
+                </svg>
+                <span style="font-weight: 600; font-size: 0.875rem;">Chat Interface</span>
+            </div>
+            <p style="color: var(--gh-text-secondary); font-size: 0.8125rem; margin: 0;">
+                Interactive chat UI with message history, styled after GitHub's design system.
+            </p>
+        </div>
+
+        <div class="gh-card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <svg width="20" height="20" viewBox="0 0 16 16" style="fill: var(--gh-green);">
+                    <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5Z"/>
+                </svg>
+                <span style="font-weight: 600; font-size: 0.875rem;">Azure Functions</span>
+            </div>
+            <p style="color: var(--gh-text-secondary); font-size: 0.8125rem; margin: 0;">
+                Serverless .NET 10 isolated-process backend ready for Azure AI Foundry integration.
+            </p>
+        </div>
+
+        <div class="gh-card">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <svg width="20" height="20" viewBox="0 0 16 16" style="fill: var(--gh-purple);">
+                    <path d="M9.504.43a1.516 1.516 0 0 1 2.437 1.713L10.415 5.5h2.123c1.57 0 2.346 1.909 1.22 3.004l-7.34 7.142a1.249 1.249 0 0 1-.871.354h-.302a1.25 1.25 0 0 1-1.157-1.723L5.633 10.5H3.462c-1.57 0-2.346-1.909-1.22-3.004L9.503.431Z"/>
+                </svg>
+                <span style="font-weight: 600; font-size: 0.875rem;">AI Ready</span>
+            </div>
+            <p style="color: var(--gh-text-secondary); font-size: 0.8125rem; margin: 0;">
+                Architecture prepared for Azure AI Foundry (agent service) integration via environment variables.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Quick start -->
+    <div class="gh-card" style="margin-top: 1rem;">
+        <div class="gh-card-header">Quick Start</div>
+        <p style="color: var(--gh-text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+            Head to the <a href="chat">Chat</a> page to start interacting with the AI assistant.
+        </p>
+        <a href="chat" class="chat-send-btn" style="display: inline-flex; text-decoration: none;">
+            <svg width="16" height="16" viewBox="0 0 16 16" style="fill: currentColor;">
+                <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/>
+            </svg>
+            Open Chat
+        </a>
+    </div>
+
+</div>
+

@@ -1,0 +1,124 @@
+@page "/chat"
+@inject HttpClient Http
+
+<PageTitle>Chat – AI Chat Assistant</PageTitle>
+
+<div class="chat-container">
+
+    <!-- Chat header (like a GitHub issue header) -->
+    <div class="chat-header">
+        <svg class="chat-header-icon" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/>
+        </svg>
+        <span class="chat-header-title">AI Chat Assistant</span>
+        @if (_isLoading)
+        {
+            <div class="gh-spinner" style="margin-left: 0.5rem;"></div>
+        }
+        <span class="chat-header-badge">@(_messages.Count) messages</span>
+    </div>
+
+    <!-- Messages area -->
+    <div class="chat-messages" @ref="_messageContainer">
+        @if (_messages.Count == 0)
+        {
+            <div class="chat-empty">
+                <svg class="chat-empty-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/>
+                </svg>
+                <h3>Start a conversation</h3>
+                <p>Type a message below to chat with the AI assistant. The assistant is powered by Azure Functions and Azure AI Foundry.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var msg in _messages)
+            {
+                <div class="chat-message @(msg.IsUser ? "user-message" : "bot-message")">
+                    <div class="chat-avatar @(msg.IsUser ? "user-avatar" : "bot-avatar")">
+                        @(msg.IsUser ? "U" : "AI")
+                    </div>
+                    <div>
+                        <div class="chat-bubble">@msg.Text</div>
+                        <div class="chat-time">@msg.Timestamp.ToString("HH:mm")</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Input area -->
+    <div class="chat-input-area">
+        <textarea class="chat-input"
+                  placeholder="Ask the AI assistant anything…"
+                  rows="1"
+                  @bind="_inputText"
+                  @bind:event="oninput"
+                  @onkeydown="HandleKeyDown"
+                  disabled="@_isLoading"></textarea>
+        <button class="chat-send-btn"
+                @onclick="SendMessage"
+                disabled="@(string.IsNullOrWhiteSpace(_inputText) || _isLoading)">
+            <svg width="16" height="16" viewBox="0 0 16 16" style="fill: currentColor;" aria-hidden="true">
+                <path d="M1.958 1.042a.25.25 0 0 0-.306.392l2.984 2.25-.875 5.613a.25.25 0 0 0 .375.25l3.338-1.93 2.046 2.047a.25.25 0 0 0 .406-.11l1.997-7.985a.25.25 0 0 0-.356-.278l-9.61 -0.25Zm1.27 1.9 6.982-1.822-1.48 5.912-1.61-1.61a.25.25 0 0 0-.332-.019L5.07 7.025l.672-4.308-.515-.077Z"/>
+            </svg>
+            Send
+        </button>
+    </div>
+
+</div>
+
+@code {
+    private record ChatMessage(string Text, bool IsUser, DateTime Timestamp);
+
+    private readonly List<ChatMessage> _messages = new();
+    private string _inputText = string.Empty;
+    private bool _isLoading;
+    private ElementReference _messageContainer;
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey && !string.IsNullOrWhiteSpace(_inputText) && !_isLoading)
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        var text = _inputText.Trim();
+        if (string.IsNullOrWhiteSpace(text) || _isLoading) return;
+
+        _inputText = string.Empty;
+        _isLoading = true;
+        _messages.Add(new ChatMessage(text, IsUser: true, DateTime.Now));
+        StateHasChanged();
+
+        await ScrollToBottom();
+
+        try
+        {
+            var url = $"/api/greet?name=User&prompt={Uri.EscapeDataString(text)}";
+            var result = await Http.GetFromJsonAsync<GreetResponse>(url);
+            _messages.Add(new ChatMessage(result?.Message ?? "No response received.", IsUser: false, DateTime.Now));
+        }
+        catch (Exception ex)
+        {
+            _messages.Add(new ChatMessage($"Error contacting the assistant: {ex.Message}", IsUser: false, DateTime.Now));
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(50); // Allow DOM update
+        // Scrolling is handled by CSS overflow; JS interop could be added for auto-scroll
+    }
+
+    private record GreetResponse(string Message);
+}
